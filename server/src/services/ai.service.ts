@@ -42,4 +42,57 @@ export class AiService {
             throw new Error('Failed to generate roadmap: ' + error.message);
         }
     }
+
+    static async analyzeCodeComplexity(code: string, language: string) {
+        const prompt = `
+      Analyze the following ${language} code for its time and space complexity (Big O notation).
+      Code:
+      ${code}
+
+      Response format:
+      {
+        "timeComplexity": "O(...)",
+        "spaceComplexity": "O(...)",
+        "explanation": "..."
+      }
+    `;
+
+        try {
+            const result = await this.model.generateContent(prompt);
+            const response = await result.response;
+            let text = response.text();
+            if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
+            else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
+            return JSON.parse(text);
+        } catch (error: any) {
+            console.error('Gemini AI Complexity Error:', error.message);
+            throw new Error('Failed to analyze complexity');
+        }
+    }
+
+    static async breakdownCodeLogic(code: string, language: string) {
+        const prompt = `
+      Break down the following ${language} code into simple, human-readable logic steps.
+      Code:
+      ${code}
+
+      Response format:
+      {
+        "steps": ["Step 1: ...", "Step 2: ..."],
+        "summary": "..."
+      }
+    `;
+
+        try {
+            const result = await this.model.generateContent(prompt);
+            const response = await result.response;
+            let text = response.text();
+            if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
+            else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
+            return JSON.parse(text);
+        } catch (error: any) {
+            console.error('Gemini AI Breakdown Error:', error.message);
+            throw new Error('Failed to break down logic');
+        }
+    }
 }

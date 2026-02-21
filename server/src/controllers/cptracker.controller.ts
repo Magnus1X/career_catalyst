@@ -3,7 +3,7 @@ import { CodeforcesService } from '../services/codeforces.service';
 
 export class CPTrackerController {
     static async getInsights(req: Request, res: Response) {
-        const { handle } = req.params;
+        const handle = req.params.handle as string;
 
         if (!handle) {
             return res.status(400).json({ error: 'Codeforces handle is required' });
@@ -48,7 +48,7 @@ export class CPTrackerController {
     }
 
     static async getUserInfo(req: Request, res: Response) {
-        const { handle } = req.params;
+        const handle = req.params.handle as string;
 
         try {
             const userInfo = await CodeforcesService.getUserInfo(handle);

@@ -95,4 +95,34 @@ export class AiService {
             throw new Error('Failed to break down logic');
         }
     }
+
+    static async evaluateInterviewAnswer(question: string, answer: string) {
+        const prompt = `
+      Evaluate the following technical interview technical answer.
+      Question: ${question}
+      Answer: ${answer}
+
+      Analyze it for technical accuracy, communication clarity, and provide a growth score (0-100).
+      Response format:
+      {
+        "score": 0-100,
+        "feedback": "...",
+        "technicalAccuracy": "...",
+        "clarity": "...",
+        "improvementTips": ["..."]
+      }
+    `;
+
+        try {
+            const result = await this.model.generateContent(prompt);
+            const response = await result.response;
+            let text = response.text();
+            if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
+            else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
+            return JSON.parse(text);
+        } catch (error: any) {
+            console.error('Gemini AI Evaluation Error:', error.message);
+            throw new Error('Failed to evaluate answer');
+        }
+    }
 }

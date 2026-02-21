@@ -1,18 +1,11 @@
 import { Request, Response } from 'express';
 import { CodeforcesService } from '../services/codeforces.service';
+import { AiService } from '../services/ai.service';
 
 export class CPTrackerController {
-    static async getInsights(req: Request, res: Response) {
-        const handle = req.params.handle as string;
-
-        if (!handle) {
-            return res.status(400).json({ error: 'Codeforces handle is required' });
-        }
-
+    private static async analyzeWeakTopics(handle: string) {
         try {
             const submissions = await CodeforcesService.getUserSubmissions(handle);
-
-            // Analyze weak topics based on failed submissions (non-OK verdict)
             const topicStats: Record<string, { total: number; failed: number }> = {};
 
             submissions.forEach((sub) => {
@@ -27,8 +20,7 @@ export class CPTrackerController {
                 });
             });
 
-            // Filter for weak topics (e.g., failed > 30% and total > 5)
-            const weakTopics = Object.entries(topicStats)
+            return Object.entries(topicStats)
                 .filter(([_, stats]) => stats.total > 5 && (stats.failed / stats.total) > 0.3)
                 .map(([tag, stats]) => ({
                     tag,
@@ -36,12 +28,32 @@ export class CPTrackerController {
                     total: stats.total,
                 }))
                 .sort((a, b) => parseFloat(b.failureRate) - parseFloat(a.failureRate));
+        } catch (error: any) {
+            console.error('Error analyzing weak topics:', error.message);
+            throw error;
+        }
+    }
 
-            res.status(200).json({
-                handle,
-                weakTopics,
-                totalSubmissionsChecked: submissions.length,
-            });
+    static async getInsights(req: Request, res: Response) {
+        const handle = req.params.handle as string;
+        if (!handle) return res.status(400).json({ error: 'Handle is required' });
+
+        try {
+            const weakTopics = await CPTrackerController.analyzeWeakTopics(handle);
+            res.status(200).json({ handle, weakTopics });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message || 'Internal server error' });
+        }
+    }
+
+    static async getRoadmap(req: Request, res: Response) {
+        const handle = req.params.handle as string;
+        if (!handle) return res.status(400).json({ error: 'Handle is required' });
+
+        try {
+            const weakTopics = await CPTrackerController.analyzeWeakTopics(handle);
+            const roadmap = await AiService.generatePracticeRoadmap(handle, weakTopics);
+            res.status(200).json({ handle, weakTopics, roadmap });
         } catch (error: any) {
             res.status(500).json({ error: error.message || 'Internal server error' });
         }
@@ -49,6 +61,7 @@ export class CPTrackerController {
 
     static async getUserInfo(req: Request, res: Response) {
         const handle = req.params.handle as string;
+        if (!handle) return res.status(400).json({ error: 'Handle is required' });
 
         try {
             const userInfo = await CodeforcesService.getUserInfo(handle);

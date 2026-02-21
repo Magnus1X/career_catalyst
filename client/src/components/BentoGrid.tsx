@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Code, Mic, FileText, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface BentoCardProps {
     title: string;
@@ -8,14 +9,16 @@ interface BentoCardProps {
     icon: React.ReactNode;
     className?: string;
     delay?: number;
+    onClick?: () => void;
 }
 
-const BentoCard: React.FC<BentoCardProps> = ({ title, description, icon, className = '', delay = 0 }) => (
+const BentoCard: React.FC<BentoCardProps> = ({ title, description, icon, className = '', delay = 0, onClick }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay }}
-        className={`bento-card group flex flex-col justify-between h-full ${className}`}
+        onClick={onClick}
+        className={`bento-card group flex flex-col justify-between h-full cursor-pointer ${className}`}
     >
         <div>
             <div className="p-3 w-fit rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors mb-4">
@@ -31,6 +34,8 @@ const BentoCard: React.FC<BentoCardProps> = ({ title, description, icon, classNa
 );
 
 const BentoGrid: React.FC = () => {
+    const navigate = useNavigate();
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-6xl mx-auto px-6 py-12">
             <BentoCard
@@ -39,18 +44,21 @@ const BentoGrid: React.FC = () => {
                 title="CP Journey Tracker"
                 description="Analyze your Codeforces performance, identify weak topics like DP or Graphs, and get a personalized AI-powered training roadmap."
                 icon={<Trophy className="w-6 h-6 text-yellow-500" />}
+                onClick={() => navigate('/cp-tracker')}
             />
             <BentoCard
                 delay={0.2}
                 title="Intelligent Code Insights"
                 description="Deep dive into code comprehension with Big O notation analysis and human-readable logic breakdowns."
                 icon={<Code className="w-6 h-6 text-blue-500" />}
+                onClick={() => navigate('/code-insights')}
             />
             <BentoCard
                 delay={0.3}
                 title="AI Mock Interviewer"
                 description="Practice technical interviews with voice-first interaction and high-fidelity feedback on accuracy and clarity."
                 icon={<Mic className="w-6 h-6 text-purple-500" />}
+                onClick={() => navigate('/ai-interviewer')}
             />
             <BentoCard
                 delay={0.4}

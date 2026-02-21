@@ -19,3 +19,23 @@ model User {
 
   @@map("users")
 }
+
+model Document {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  filename  String
+  createdAt DateTime @default(now())
+  chunks    Chunk[]
+
+  @@map("documents")
+}
+
+model Chunk {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  docId      String   @db.ObjectId
+  content    String
+  embedding  Float[]
+  document   Document @relation(fields: [docId], references: [id])
+
+  @@map("chunks")
+}

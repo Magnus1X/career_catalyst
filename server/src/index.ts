@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import cpTrackerRoutes from './routes/cptracker.routes';
 import codeInsightsRoutes from './routes/codeinsights.routes';
 import interviewRoutes from './routes/interview.routes';
+import ragRoutes from './routes/rag.routes';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use('/api/cp-tracker', cpTrackerRoutes);
 app.use('/api/code-insights', codeInsightsRoutes);
 app.use('/api/interview', interviewRoutes);
+app.use('/api/rag', ragRoutes);
 
 app.get('/health', (req: Request, res: Response) => {
     res.status(200).json({ status: 'OK', message: 'Server is running' });

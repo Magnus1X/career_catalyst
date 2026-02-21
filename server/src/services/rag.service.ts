@@ -1,4 +1,5 @@
 import fs from 'fs';
+// @ts-ignore
 import pdf from 'pdf-parse';
 import prisma from '../config/prisma';
 import { AiService } from './ai.service';
@@ -19,7 +20,7 @@ export class RagService {
             });
 
             // Simple chunking (e.g., by double newlines or fixed length)
-            const chunks = text.split(/\n\s*\n/).filter((c) => c.trim().length > 50);
+            const chunks = text.split(/\n\s*\n/).filter((c: string) => c.trim().length > 50);
 
             for (const content of chunks) {
                 const embedding = await AiService.getEmbedding(content);

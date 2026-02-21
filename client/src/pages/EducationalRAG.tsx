@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { ragApi } from '../services/api.service';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FileUp, Search, Book, Loader2, Send, FileText, CheckCircle, MessageSquare } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { FileUp, Book, Loader2, Send, FileText, CheckCircle, MessageSquare } from 'lucide-react';
 
 const EducationalRAG: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);

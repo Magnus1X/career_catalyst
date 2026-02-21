@@ -66,6 +66,7 @@ const BentoGrid: React.FC = () => {
                 title="Educational RAG"
                 description="Upload technical PDFs or textbooks and query them using an AI-summarized specialized Retrieval-Augmented Generation system."
                 icon={<FileText className="w-6 h-6 text-emerald-500" />}
+                onClick={() => navigate('/educational-rag')}
             />
         </div>
     );

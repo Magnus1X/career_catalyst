@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rocket, Github, Trophy } from 'lucide-react';
+import { Rocket, Github } from 'lucide-react';
 
 const Navbar: React.FC = () => {
     return (

@@ -1,6 +1,5 @@
 import fs from 'fs';
-// @ts-ignore
-import pdf from 'pdf-parse';
+const pdf = require('pdf-parse');
 import prisma from '../config/prisma';
 import { AiService } from './ai.service';
 

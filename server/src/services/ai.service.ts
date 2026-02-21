@@ -4,13 +4,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export class AiService {
-    private static genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-    private static model = AiService.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  private static genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+  private static model = AiService.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    static async generatePracticeRoadmap(handle: string, weakTopics: any[]) {
-        const topicsList = weakTopics.map((t) => `${t.tag} (Failure Rate: ${t.failureRate})`).join(', ');
+  static async generatePracticeRoadmap(handle: string, weakTopics: any[]) {
+    const topicsList = weakTopics.map((t) => `${t.tag} (Failure Rate: ${t.failureRate})`).join(', ');
 
-        const prompt = `
+    const prompt = `
       User ${handle} has the following weak topics in competitive programming (Codeforces): ${topicsList}.
       Generate a personalized practice roadmap with specific study resources, problem types to practice, and a 2-week plan to improve these areas.
       Format the response as a JSON object with the following structure:
@@ -24,27 +24,27 @@ export class AiService {
       }
     `;
 
-        try {
-            const result = await this.model.generateContent(prompt);
-            const response = await result.response;
-            let text = response.text();
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      let text = response.text();
 
-            // Basic JSON extraction from markdown if necessary
-            if (text.includes('```json')) {
-                text = text.split('```json')[1].split('```')[0].trim();
-            } else if (text.includes('```')) {
-                text = text.split('```')[1].split('```')[0].trim();
-            }
+      // Basic JSON extraction from markdown if necessary
+      if (text.includes('```json')) {
+        text = text.split('```json')[1].split('```')[0].trim();
+      } else if (text.includes('```')) {
+        text = text.split('```')[1].split('```')[0].trim();
+      }
 
-            return JSON.parse(text);
-        } catch (error: any) {
-            console.error('Gemini AI Error:', error.message);
-            throw new Error('Failed to generate roadmap: ' + error.message);
-        }
+      return JSON.parse(text);
+    } catch (error: any) {
+      console.error('Gemini AI Error:', error.message);
+      throw new Error('Failed to generate roadmap: ' + error.message);
     }
+  }
 
-    static async analyzeCodeComplexity(code: string, language: string) {
-        const prompt = `
+  static async analyzeCodeComplexity(code: string, language: string) {
+    const prompt = `
       Analyze the following ${language} code for its time and space complexity (Big O notation).
       Code:
       ${code}
@@ -57,21 +57,21 @@ export class AiService {
       }
     `;
 
-        try {
-            const result = await this.model.generateContent(prompt);
-            const response = await result.response;
-            let text = response.text();
-            if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
-            else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
-            return JSON.parse(text);
-        } catch (error: any) {
-            console.error('Gemini AI Complexity Error:', error.message);
-            throw new Error('Failed to analyze complexity');
-        }
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      let text = response.text();
+      if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
+      else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
+      return JSON.parse(text);
+    } catch (error: any) {
+      console.error('Gemini AI Complexity Error:', error.message);
+      throw new Error('Failed to analyze complexity');
     }
+  }
 
-    static async breakdownCodeLogic(code: string, language: string) {
-        const prompt = `
+  static async breakdownCodeLogic(code: string, language: string) {
+    const prompt = `
       Break down the following ${language} code into simple, human-readable logic steps.
       Code:
       ${code}
@@ -83,21 +83,21 @@ export class AiService {
       }
     `;
 
-        try {
-            const result = await this.model.generateContent(prompt);
-            const response = await result.response;
-            let text = response.text();
-            if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
-            else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
-            return JSON.parse(text);
-        } catch (error: any) {
-            console.error('Gemini AI Breakdown Error:', error.message);
-            throw new Error('Failed to break down logic');
-        }
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      let text = response.text();
+      if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
+      else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
+      return JSON.parse(text);
+    } catch (error: any) {
+      console.error('Gemini AI Breakdown Error:', error.message);
+      throw new Error('Failed to break down logic');
     }
+  }
 
-    static async evaluateInterviewAnswer(question: string, answer: string) {
-        const prompt = `
+  static async evaluateInterviewAnswer(question: string, answer: string) {
+    const prompt = `
       Evaluate the following technical interview technical answer.
       Question: ${question}
       Answer: ${answer}
@@ -113,16 +113,27 @@ export class AiService {
       }
     `;
 
-        try {
-            const result = await this.model.generateContent(prompt);
-            const response = await result.response;
-            let text = response.text();
-            if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
-            else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
-            return JSON.parse(text);
-        } catch (error: any) {
-            console.error('Gemini AI Evaluation Error:', error.message);
-            throw new Error('Failed to evaluate answer');
-        }
+    try {
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      let text = response.text();
+      if (text.includes('```json')) text = text.split('```json')[1].split('```')[0].trim();
+      else if (text.includes('```')) text = text.split('```')[1].split('```')[0].trim();
+      return JSON.parse(text);
+    } catch (error: any) {
+      console.error('Gemini AI Evaluation Error:', error.message);
+      throw new Error('Failed to evaluate answer');
     }
+  }
+
+  static async getEmbedding(text: string) {
+    try {
+      const model = AiService.genAI.getGenerativeModel({ model: 'text-embedding-004' });
+      const result = await model.embedContent(text);
+      return result.embedding.values;
+    } catch (error: any) {
+      console.error('Gemini Embedding Error:', error.message);
+      throw new Error('Failed to generate embedding');
+    }
+  }
 }

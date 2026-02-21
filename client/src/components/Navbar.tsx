@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rocket, Github, LogOut, User } from 'lucide-react';
+import { Rocket, Github, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 

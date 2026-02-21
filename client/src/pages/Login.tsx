@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogIn, Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 
 const Login: React.FC = () => {
